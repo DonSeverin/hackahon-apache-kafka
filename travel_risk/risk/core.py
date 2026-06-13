@@ -1,5 +1,23 @@
 import time
 
+import requests
+
+from travel_risk.config import (
+    COMMUTE_LINES,
+    FROM_LOCATION,
+    TFL_APP_KEY,
+    TFL_BASE_URL,
+    TO_LOCATION,
+)
+
+
+def delivery_report(err, msg):
+    if err is not None:
+        print("Delivery failed:", err)
+    else:
+        print(f"Delivered to {msg.topic()} [{msg.partition()}]")
+        
+
 def fetch_line_statuses(lines):
     line_ids = ",".join(lines)
     url = f"{TFL_BASE_URL}/Line/{line_ids}/Status"
@@ -8,6 +26,7 @@ def fetch_line_statuses(lines):
     response = requests.get(url, params=params, timeout=10)
     response.raise_for_status()
     return response.json()
+
 
 def calculate_risk(line_statuses):
     score = 0
@@ -47,6 +66,7 @@ def calculate_risk(line_statuses):
     score = min(score, 100)
     return score, risk_level(score), reasons
 
+
 def risk_level(score):
     if score <= 20:
         return "low"
@@ -55,6 +75,7 @@ def risk_level(score):
     if score <= 80:
         return "high"
     return "severe"
+
 
 def build_commute_risk_event():
     line_statuses = fetch_line_statuses(COMMUTE_LINES)
@@ -82,4 +103,3 @@ def build_commute_risk_event():
         "risk_level": level,
         "reasons": reasons,
     }
-

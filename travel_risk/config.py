@@ -1,8 +1,4 @@
 import os
-from typing import Dict, Any, Optional, List
-from 
-
-
 
 
 TFL_BASE_URL = "https://api.tfl.gov.uk"
@@ -12,3 +8,4 @@ TO_LOCATION = "Paddington"
 COMMUTE_LINES = ["central", "jubilee", "elizabeth"]
 POLL_SECONDS = 30
 TOPIC = "commute-risk"
+KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")

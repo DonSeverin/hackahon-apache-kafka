@@ -1,25 +1,18 @@
 import json
-import os
 import time
+
 from confluent_kafka import Producer
 
+from travel_risk.config import KAFKA_BOOTSTRAP_SERVERS, POLL_SECONDS, TOPIC
 from travel_risk.risk.core import (
-    calculate_risk,
-    risk_level,
     build_commute_risk_event,
-    )
-
+    delivery_report,
+)
 
 
 producer = Producer({
-    "bootstrap.servers": "localhost:9092"
+    "bootstrap.servers": KAFKA_BOOTSTRAP_SERVERS
 })
-
-def delivery_report(err, msg):
-    if err is not None:
-        print("Delivery failed:", err)
-    else:
-        print(f"Delivered to {msg.topic()} [{msg.partition()}]")
 
 
 while True:

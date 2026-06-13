@@ -1,13 +1,15 @@
 import json
 from confluent_kafka import Consumer, Message
+from travel_risk.config import KAFKA_BOOTSTRAP_SERVERS, TOPIC
+
 
 consumer = Consumer({
-    "bootstrap.servers": "localhost:9092",
+    "bootstrap.servers": KAFKA_BOOTSTRAP_SERVERS,
     "group.id": "transport-consumer-group",
     "auto.offset.reset": "earliest"
 })
 
-consumer.subscribe(["commute-risk"])
+consumer.subscribe([TOPIC])
 
 print("Listening for commute risk events...")
 
